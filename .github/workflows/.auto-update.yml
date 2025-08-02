@@ -1,0 +1,26 @@
+name: Auto Update File Every Minute
+
+on:
+  schedule:
+    - cron: '*/1 * * * *'  # Runs every minute (GitHub UTC Time)
+  workflow_dispatch:       # Manual trigger button
+
+jobs:
+  auto-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Update update.txt with current date
+        run: |
+          echo "Last updated on $(date)" > update.txt
+
+      - name: Commit & Push Changes
+        run: |
+          git config user.name "vishalbhatvb"
+          git config user.email "vishalbhat444@gmail.com"
+          git add update.txt
+          git commit -m "Auto-update on $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push
